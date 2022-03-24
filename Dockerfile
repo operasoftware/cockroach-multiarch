@@ -1,15 +1,14 @@
-FROM golang:latest as prebuild
+FROM golang:1.16.6-buster as prebuild
 RUN go version
 RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y upgrade
 RUN ["/bin/bash", "-c", "curl -sL https://deb.nodesource.com/setup_12.x | bash -"]
-RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add
-RUN echo "deb [arch=arm64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN wget -O /usr/local/bin/bazel https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel-5.1.0-linux-arm64 && chmod +x /usr/local/bin/bazel
 RUN apt-get -y update
-RUN apt-get -y install build-essential gcc g++ cmake autoconf wget bison libncurses-dev ccache curl git libgeos-dev tzdata apt-transport-https lsb-release ca-certificates bazel* yarn nodejs
+RUN apt-get -y install build-essential gcc g++ cmake autoconf wget bison libncurses-dev ccache curl git libgeos-dev tzdata apt-transport-https lsb-release ca-certificates yarn nodejs
 
 FROM prebuild as build
 RUN /bin/bash -c "mkdir -p $(go env GOPATH)/src/github.com/cockroachdb && \
