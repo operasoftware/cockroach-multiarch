@@ -4,4 +4,4 @@
 
 A reasonably recent build of CockroachDB with `x86_64` and `arm64` binaries published under a common tag.
 
-[Docker Hub](https://hub.docker.com/r/asgavar/cockroach-multiarch/tags)
+[Docker Hub](https://hub.docker.com/r/operasoftware/cockroach-multiarch/tags)
