@@ -1,9 +1,5 @@
-FROM golang:1.16.6-buster as prebuild
+FROM golang:1.16.15-bullseye as prebuild
 ARG TARGETARCH
-RUN go version
-RUN apt-get update
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get -y upgrade
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN wget -O /usr/local/bin/bazel \
     https://github.com/bazelbuild/bazel/releases/download/5.1.0/bazel-5.1.0-linux-$([[ $TARGETARCH = "arm64" ]] && echo "arm64" || echo "x86_64") && \
@@ -21,8 +17,7 @@ RUN /bin/bash -c "git submodule update --init --recursive"
 RUN /bin/bash -c "make build"
 RUN /bin/bash -c "make install"
 
-FROM ubuntu:latest
-RUN apt-get update && apt-get -y upgrade && apt-get install -y libc6 ca-certificates tzdata hostname tar && rm -rf /var/lib/apt/lists/*
+FROM ubuntu:jammy-20220315
 WORKDIR /cockroach/
 ENV PATH=/cockroach:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN mkdir -p /cockroach/ /usr/local/lib/cockroach /licenses
