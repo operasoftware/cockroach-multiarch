@@ -1,4 +1,4 @@
-FROM golang:1.16.15-bullseye as prebuild
+FROM golang:1.17.8-bullseye as prebuild
 ARG TARGETARCH
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN wget -O /usr/local/bin/bazel \
@@ -18,7 +18,6 @@ RUN /bin/bash -c "make build"
 RUN /bin/bash -c "make install"
 
 FROM ubuntu:jammy-20220315
-RUN apt update && apt install --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /cockroach/
 ENV PATH=/cockroach:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN mkdir -p /cockroach/ /usr/local/lib/cockroach /licenses
