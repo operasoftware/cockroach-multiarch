@@ -18,6 +18,7 @@ RUN /bin/bash -c "make build"
 RUN /bin/bash -c "make install"
 
 FROM ubuntu:jammy-20220315
+RUN apt update && apt install --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /cockroach/
 ENV PATH=/cockroach:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN mkdir -p /cockroach/ /usr/local/lib/cockroach /licenses
