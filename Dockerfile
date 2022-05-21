@@ -1,4 +1,4 @@
-FROM golang:1.17.8-bullseye as prebuild
+FROM golang:1.17.10-bullseye as prebuild
 ARG TARGETARCH
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN wget -O /usr/local/bin/bazel \
@@ -11,13 +11,13 @@ RUN corepack enable
 FROM prebuild as build
 RUN /bin/bash -c "mkdir -p /go/src/github.com/cockroachdb && cd /go/src/github.com/cockroachdb"
 WORKDIR /go/src/github.com/cockroachdb
-RUN /bin/bash -c "git clone --branch v21.2.9 https://github.com/cockroachdb/cockroach"
+RUN /bin/bash -c "git clone --branch v21.2.10 https://github.com/cockroachdb/cockroach"
 WORKDIR /go/src/github.com/cockroachdb/cockroach
 RUN /bin/bash -c "git submodule update --init --recursive"
 RUN /bin/bash -c "make build"
 RUN /bin/bash -c "make install"
 
-FROM ubuntu:jammy-20220315
+FROM ubuntu:kinetic-20220428
 WORKDIR /cockroach/
 ENV PATH=/cockroach:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN mkdir -p /cockroach/ /usr/local/lib/cockroach /licenses
